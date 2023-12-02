@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: user@123
+      MYSQL_DATABASE: csk_bookingappointmentsystem
+      MYSQL_USER: root
+      MYSQL_PASSWORD: user@123
+    volumes:
+      - ./csk_bookingappointmentsystem.sql:/docker-entrypoint-initdb.d/csk_bookingappointmentsystem.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8011:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: user@123
+

@@ -1,0 +1,10 @@
+version: '3.1'
+
+services:
+  web:
+    image: php:8.0-apache
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./tests:/var/www/html

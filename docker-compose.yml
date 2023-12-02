@@ -1,0 +1,66 @@
+version: '3.1'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8200:80"
+    volumes:
+      - ./:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  web2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8201:80"
+    volumes:
+      - ./:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: user@123
+      MYSQL_DATABASE: csk_bookingappointmentsystem
+      MYSQL_USER: root
+      MYSQL_PASSWORD: user@123
+    ports:
+      - "8203:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8202:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: user@123
+    depends_on:
+      - db
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      - MINIO_ACCESS_KEY=AKIAZ6RUNNND6TSFDNVN
+      - MINIO_SECRET_KEY=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
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data:/data
+    command: server /data
+    entrypoint: sh -c 'minio server $DATA_DIR --console-address :9000'
+
+volumes:
+  db-data:
+
